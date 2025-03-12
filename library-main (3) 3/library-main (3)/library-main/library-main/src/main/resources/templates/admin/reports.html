@@ -2,102 +2,153 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Library Reports</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script type="text/javascript" src="https://public.tableau.com/javascripts/api/tableau-2.min.js"></script>
   <style>
-    body {
-        background: linear-gradient(to right, #e6d5b8, #f3efe0);
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        color: #3d3d3d;
-        min-height: 100vh;
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      overflow: hidden !important;
+      position: fixed;
+      background: linear-gradient(to right, #e6d5b8, #f3efe0);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    .container {
-        max-width: 900px;
-        margin: auto;
-        margin-top: 60px;
-        text-align: center;
+
+    #app {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center; 
+      height: 100vh;
+      width: 100vw;
+      max-height: 100vh;
+      max-width: 100vw;
     }
+
+    .header {
+      padding-top: 10px;
+      text-align: center;
+      flex: 0 0 auto;
+      width: 100%;
+    }
+
     h1 {
-        font-weight: bold;
-        color: #5a3e2b;
+      font-weight: bold;
+      color: #5a3e2b;
+      margin: 0 0 5px 0;
+      font-size: 1.8rem;
     }
-    .report-container {
-        position: relative;
-        max-width: 100%;
-        height: 600px;
-        margin: auto;
+
+    h5 {
+      color: #3d3d3d;
+      margin: 0 0 2px 0;
+      font-size: 1rem;
     }
-    .btn-nav {
-        background: #8b4513;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 10px 20px;
-        transition: background 0.3s ease;
-        margin: 10px;
+
+    p {
+      color: #555;
+      margin: 0 0 5px 0;
+      font-size: 0.9rem;
     }
-    .btn-nav:hover {
-        background: #5a3e2b;
+
+    .viz-container {
+      flex: 1 1 auto;
+      width: 90%;
+      max-width: 1200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #tableau-story {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
     }
   </style>
 </head>
 <body>
+<div id="app">
+  <div class="header">
+    <h1>📊 Library Reports</h1>
+    <h5>📌 Library Story</h5>
+    <p>Insights on Genres, Issued Books and Active Users</p>
+  </div>
 
-<div class="container">
-  <h1>📊 Library Reports</h1>
-  <h5 id="report-title">📌 Report 1</h5>
-  <p id="report-description">Most Issued Genre.</p>
-  <div class="report-container" id="viz-container"></div>
-
-  <div class="text-center mt-4">
-    <button class="btn btn-nav" onclick="prevReport()">⬅ Previous</button>
-    <button class="btn btn-nav" onclick="nextReport()">Next ➡</button>
+  <div class="viz-container">
+    <div id="tableau-story" class="tableauPlaceholder">
+      <noscript>
+        <a href="#">
+          <img alt="Dashboard" src="https://public.tableau.com/static/images/Da/Dashboard_17417976251510/Story1/1_rss.png" style="border: none" />
+        </a>
+      </noscript>
+      <object class="tableauViz" style="display:block;">
+        <param name="host_url" value="https%3A%2F%2Fpublic.tableau.com%2F" />
+        <param name="embed_code_version" value="3" />
+        <param name="site_root" value="" />
+        <param name="name" value="Dashboard_17417976251510/Story1" />
+        <param name="tabs" value="no" />
+        <param name="toolbar" value="yes" />
+        <param name="static_image" value="https://public.tableau.com/static/images/Da/Dashboard_17417976251510/Story1/1.png" />
+        <param name="animate_transition" value="yes" />
+        <param name="display_static_image" value="yes" />
+        <param name="display_spinner" value="yes" />
+        <param name="display_overlay" value="yes" />
+        <param name="display_count" value="yes" />
+        <param name="language" value="en-US" />
+        <param name="filter" value="publish=yes" />
+      </object>
+    </div>
   </div>
 </div>
 
-<script>
-  let currentSheetIndex = 0;
-  const sheets = ["Sheet1", "Sheet2", "Sheet3"];
-  const sheetTitles = ["📌 Report 1", "📌 Report 2", "📌 Report 3"];
-  const sheetDescriptions = ["Most Issued Genre", "Books Issued per User", "Overdue Books and Fines"];
-  const vizContainer = document.getElementById("viz-container");
-  let viz;
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function() {
+    var divElement = document.getElementById('tableau-story');
+    var vizElement = divElement.getElementsByTagName('object')[0];
 
-  function loadTableauReport(sheetIndex) {
-      document.getElementById("report-title").innerText = sheetTitles[sheetIndex];
-      document.getElementById("report-description").innerText = sheetDescriptions[sheetIndex];
+    function setVizDimensions() {
+      var containerHeight = document.querySelector('.viz-container').clientHeight;
+      var containerWidth = document.querySelector('.viz-container').clientWidth;
 
-      const url = "https://public.tableau.com/views/Dashboard1_17416774691040/" + sheets[sheetIndex];
+      vizElement.style.width = containerWidth + 'px';
+      vizElement.style.height = containerHeight + 'px';
+    }
 
-      if (viz) {
-          viz.dispose(); // Clear existing report before loading new one
-      }
+    // Set initial dimensions
+    setVizDimensions();
 
-      let options = {
-          hideTabs: true,
-          hideToolbar: false,
-          width: "100%",
-          height: "600px"
-      };
+    // Prevent scrolling
+    document.body.addEventListener('touchmove', function(e) {
+      e.preventDefault();
+    }, { passive: false });
 
-      viz = new tableau.Viz(vizContainer, url, options);
-  }
+    document.body.addEventListener('wheel', function(e) {
+      e.preventDefault();
+    }, { passive: false });
 
-  function nextReport() {
-      currentSheetIndex = (currentSheetIndex + 1) % sheets.length;
-      loadTableauReport(currentSheetIndex);
-  }
+    // Handle resize
+    window.addEventListener('resize', setVizDimensions);
 
-  function prevReport() {
-      currentSheetIndex = (currentSheetIndex - 1 + sheets.length) % sheets.length;
-      loadTableauReport(currentSheetIndex);
-  }
+    // Load the Tableau visualization
+    var scriptElement = document.createElement('script');
+    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+    scriptElement.onload = function() {
+      // Reapply dimensions after Tableau loads
+      setTimeout(setVizDimensions, 500);
+    };
 
-  document.addEventListener("DOMContentLoaded", function () {
-      loadTableauReport(currentSheetIndex);
+    vizElement.parentNode.insertBefore(scriptElement, vizElement);
   });
 </script>
-
 </body>
 </html>
