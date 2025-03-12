@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Library Admin Dashboard</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom Styling -->
+    <style>
+        /* Body Background */
+        body {
+            background: linear-gradient(to right, #e6d5b8, #f3efe0);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #3d3d3d;
+            min-height: 100vh;
+        }
+
+        /* Dashboard Container */
+        .dashboard-container {
+            max-width: 900px;
+            margin: auto;
+            margin-top: 60px;
+        }
+
+        /* Header Styling */
+        h1 {
+            font-weight: bold;
+            color: #5a3e2b;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Card Styling */
+        .dashboard-card {
+            background: #ffffff;
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-title {
+            font-weight: 600;
+            color: #4d2b1f;
+        }
+
+        .card-link {
+            text-decoration: none;
+            color: #8b4513;
+            transition: color 0.3s;
+        }
+
+        .card-link:hover {
+            color: #5a3e2b;
+        }
+
+        /* Logout Button */
+        .btn-logout {
+            background: #b23b3b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 24px;
+            transition: background 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background: #8b0000;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="dashboard-container">
+    <!-- Header -->
+    <h1 class="text-center mb-5">📚 Welcome Admin!</h1>
+
+    <!-- Dashboard Cards -->
+    <div class="row g-4">
+
+        <!-- Manage Books -->
+        <div class="col-md-4">
+            <div class="card dashboard-card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">📖 Manage Books</h5>
+                    <p class="card-text">Add, edit, or remove books from the library catalog.</p>
+                    <a href="/admin/manage-books" class="card-link">Go to Books</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manage Users -->
+        <div class="col-md-4">
+            <div class="card dashboard-card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">👥 Manage Users</h5>
+                    <p class="card-text">View and manage user registrations and profiles.</p>
+                    <a href="/admin/manage-users" class="card-link">Go to Users</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Power BI Reports -->
+        <div class="col-md-4">
+            <div class="card dashboard-card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">📊 View Reports</h5>
+                    <p class="card-text">Analyze data with interactive Power BI dashboards.</p>
+                    <a href="/admin/reports" class="card-link">View Reports</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logout Button -->
+    <div class="text-center mt-5">
+        <a href="/logout" class="btn btn-logout">🚪 Logout</a>
+    </div>
+</div>
+
+<!-- Force Logout on Back Navigation -->
+<script>
+    window.addEventListener('pageshow', function (event) {
+        if (event.persisted || window.performance.getEntriesByType("navigation")[0].type === 'back_forward') {
+            window.location.href = '/logout';
+        }
+    });
+</script>
+
+</body>
+
+</html>
+
+<!--<script>-->
+<!--    window.addEventListener('pageshow', function (event) {-->
+<!--        // Check if user is navigating back and force logout-->
+<!--        if (event.persisted || window.performance.getEntriesByType("navigation")[0].type === 'back_forward') {-->
+<!--            window.location.href = '/logout';-->
+<!--        }-->
+<!--    });-->
+<!--</script>-->
