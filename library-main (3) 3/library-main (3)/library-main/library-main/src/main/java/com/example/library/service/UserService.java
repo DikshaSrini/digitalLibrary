@@ -21,23 +21,27 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Register a new user after encoding the password.
+     */
     public void registerUser(User user) {
+        // Ensure password is encoded before saving
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
-
-
+    /**
+     * Loads a user by username for authentication.
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
+        return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
-
-        System.out.println("🔍 User found: " + user.getUsername());
-        System.out.println("🔑 Stored password (hashed): " + user.getPassword());
-
-        return user;
     }
 
+    /**
+     * Manually authenticate a user by comparing raw password with stored hashed password.
+     */
     public boolean authenticate(String username, String rawPassword) {
         Optional<User> optionalUser = userRepository.findByUsername(username);
 
