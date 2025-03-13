@@ -4,42 +4,123 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manage Users</title>
+  <title>📚 Register</title>
+
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    /* Background Image */
+    body {
+        background: url('https://images.unsplash.com/photo-1589998059171-988d887df646') no-repeat center center/cover;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        font-family: 'Georgia', serif;
+        color: #5a3e2b;
+    }
+
+    /* Frosted Glass Effect */
+    .card {
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(12px);
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Form Title */
+    .card h2 {
+        font-weight: bold;
+        color: #3e2723; /* Darker shade for better visibility */
+    }
+
+    /* Input Labels */
+    .form-label {
+        font-weight: 600;
+    }
+
+    /* Register Button */
+    .btn-primary {
+        background-color: #3e8e41;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: #2e6e31;
+    }
+
+    /* Back to Dashboard Button */
+    .btn-outline-secondary {
+        color: #5a3e2b; /* Warm brown */
+        border-color: #5a3e2b;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #5a3e2b;
+        color: #fff;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .container {
+            padding: 20px;
+        }
+    }
+  </style>
 </head>
 
-<body class="bg-light">
+<body>
 
-<div class="container mt-5">
+<div class="container">
   <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card shadow-lg rounded-4">
-        <div class="card-body p-4">
-          <h2 class="text-center mb-4">Manage Users</h2>
+    <div class="col-lg-4 col-md-6 col-sm-8">
+      <div class="card p-4 shadow-lg">
+        <div class="card-body">
+          <h2 class="text-center mb-4">📋 Register</h2>
 
-          <form id="userTypeForm" action="/admin/register" method="get">
-            <label for="role" class="form-label fw-semibold">Select User Type to Register:</label>
-            <div class="input-group mb-3">
-              <select id="role" name="role" class="form-select" required>
-                <option value="" disabled selected>Choose a User Type</option>
-                <option value="librarian">Librarian</option>
-                <option value="user">User</option>
-              </select>
-              <button type="submit" class="btn btn-primary">Register</button>
+          <!-- Registration Form -->
+          <form action="http://localhost:8089/register" method="post">
+            <!-- Username Input -->
+            <div class="mb-3">
+              <label for="username" class="form-label">👤 Username</label>
+              <input type="text" id="username" name="username" class="form-control" placeholder="Enter your username" required>
             </div>
+
+            <!-- Password Input -->
+            <div class="mb-3">
+              <label for="password" class="form-label">🔒 Password</label>
+              <input type="password" id="password" name="password" class="form-control" placeholder="Enter a secure password" required>
+            </div>
+
+            <!-- Role Dropdown -->
+            <div class="mb-4">
+              <label for="role" class="form-label">📌 Select Role</label>
+              <select id="role" name="role" class="form-select" required>
+                <option value="" disabled selected>🔽 Choose a Role</option>
+                <option value="USER">👤 User</option>
+                <option value="ADMIN">🛠️ Admin</option>
+              </select>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary w-100">📝 Register</button>
           </form>
 
+          <!-- Back to Dashboard Button -->
           <div class="text-center mt-4">
-            <a href="/admin/dashboard" class="btn btn-outline-secondary">Back to Dashboard</a>
+            <a href="/admin/dashboard" class="btn btn-outline-secondary">🔙 Back to Dashboard</a>
           </div>
+
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Bootstrap JS (Optional for Bootstrap components) -->
+<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
