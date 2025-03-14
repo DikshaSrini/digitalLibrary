@@ -31,7 +31,7 @@
             text-align: center;
         }
 
-        /* Navigation */
+             /* Navigation */
         .library-nav {
             background: #8b4513;
             border-radius: 16px;
@@ -82,13 +82,13 @@
             font-size: 1.8rem;
         }
 
-        /* Google Search Box */
-        .google-search-container {
+        /* Search Box */
+        .search-container {
             position: relative;
             margin-bottom: 30px;
         }
 
-        .google-search-input {
+        .search-input {
             width: 100%;
             padding: 14px 20px;
             border: 1px solid #8b4513;
@@ -97,7 +97,7 @@
             font-size: 16px;
         }
 
-        .google-search-button {
+        .search-button {
             position: absolute;
             right: 0;
             top: 0;
@@ -111,7 +111,7 @@
             transition: background 0.3s ease;
         }
 
-        .google-search-button:hover {
+        .search-button:hover {
             background: #5a3e2b;
         }
 
@@ -128,32 +128,6 @@
 
         .btn-logout:hover {
             background: #8b0000;
-        }
-
-        /* Suggestions */
-        .google-suggestions {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            max-height: 300px;
-            overflow-y: auto;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 0 0 24px 24px;
-            box-shadow: 0 4px 6px rgba(32, 33, 36, 0.28);
-            z-index: 1000;
-            display: none;
-        }
-
-        .google-suggestion-item {
-            padding: 12px 20px;
-            cursor: pointer;
-        }
-
-        .google-suggestion-item:hover,
-        .google-suggestion-item.active {
-            background-color: #f1f3f4;
         }
 
         /* Buttons */
@@ -234,29 +208,6 @@
             color: #FFD700;
         }
 
-        /* Debug panel */
-        .debug-panel {
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-        }
-
-        /* Google suggestion category */
-        .google-suggestion-category {
-            font-weight: bold;
-            padding: 8px 20px;
-            background: #f5f5f5;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .google-suggestion-type {
-            margin-left: 8px;
-            color: #777;
-            font-size: 0.9em;
-        }
-
         /* Notice styling for empty sections */
         .empty-notice {
             text-align: center;
@@ -265,17 +216,13 @@
             border-radius: 8px;
             margin: 10px 0;
         }
-        .google-suggestion-rating {
-            margin-left: 8px;
-            color: #f39c12; /* Gold color for stars */
-            font-weight: bold;
-        }
 
-        /* Active nav item */
+         /* Active nav item */
         .library-nav-link.active {
             background-color: #6a4f4b;
             font-weight: 700;
         }
+
     </style>
 </head>
 <body>
@@ -283,7 +230,7 @@
 <!-- Header Section -->
 <div class="container mt-4">
     <div class="library-banner text-center">
-        <h1 class="fw-bold">📚 Welcome to the Library Dashboard, <span th:text="${username}"></span>!</h1>
+        <h1 class="fw-bold">📚 Welcome to the <i>BookNest</i>, <span th:text="${username}"></span>!</h1>
         <p>Search, borrow, and return your favorite books!</p>
     </div>
 
@@ -393,17 +340,26 @@
             <h2>Available Books</h2>
         </div>
         <div class="card-body">
-            <!-- Google-like Search Form -->
-            <div class="google-search-container">
-                <form id="searchForm" action="/user/dashboard" method="get">
-                    <input type="text" id="googleSearchInput" name="query" class="google-search-input"
-                           placeholder="Search books by title, author, genre, or year"
-                           th:value="${query}" autocomplete="off">
-                    <button type="submit" class="google-search-button">Search</button>
-                </form>
 
-                <!-- Google-like suggestions dropdown -->
-                <div id="googleSuggestions" class="google-suggestions"></div>
+            <div class="search-container">
+                <form id="searchForm" action="/user/dashboard" method="get">
+                    <div class="d-flex">
+                        <div class="position-relative flex-grow-1">
+                            <input type="text" id="searchInput" name="query" class="search-input"
+                                   placeholder="Search books by title, author, genre, or year"
+                                   th:value="${query}">
+                            <button type="submit" class="search-button">Search</button>
+                        </div>
+                    </div>
+
+                    <!-- Clear search link -->
+                    <div class="text-center mt-2" th:if="${query != null && !query.isEmpty()}">
+                        <a href="/user/dashboard" class="btn btn-secondary"
+                           style="background: #8b4513; color: white; border-radius: 24px; padding: 10px 24px; font-size: 16px;">
+                            Clear Search Results
+                        </a>
+                    </div>
+                </form>
             </div>
 
             <div id="genreFilterContainer" class="mb-4">
@@ -562,7 +518,6 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
 <script>
     function filterBooks() {
@@ -591,51 +546,30 @@
     document.addEventListener("DOMContentLoaded", function() {
         console.log("Document loaded, initializing components...");
 
-        // Highlight active navigation item on scroll
-        const sections = document.querySelectorAll('#suggested-books, #current-borrowed, #available-books, #borrow-history');
-        const navLinks = document.querySelectorAll('.library-nav-link');
-
-        window.addEventListener('scroll', () => {
-            let current = '';
-
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
-                if (pageYOffset >= (sectionTop - 200)) {
-                    current = section.getAttribute('id');
-                }
-            });
-
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href').includes(current)) {
-                    link.classList.add('active');
-                }
-            });
-        });
-
         // Smooth scroll for navigation links
         document.querySelectorAll('.library-nav-link').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
 
                 const targetId = this.getAttribute('href');
-                const targetSection = document.querySelector(targetId);
+                const targetElement = document.querySelector(targetId);
 
-                window.scrollTo({
-                    top: targetSection.offsetTop - 100,
-                    behavior: 'smooth'
-                });
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
 
-                // Update active state
-                document.querySelectorAll('.library-nav-link').forEach(link => {
-                    link.classList.remove('active');
-                });
-                this.classList.add('active');
+                    // Update active state
+                    document.querySelectorAll('.library-nav-link').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                }
             });
         });
 
-        // Check if the modal should be shown based on flash attributes
+        // Rating modal functionality
         const showRatingModal = document.getElementById('showRatingModal');
         if (showRatingModal && showRatingModal.value === 'true') {
             const bookId = document.getElementById('ratedBookId').value;
@@ -648,17 +582,14 @@
             ratingModal.show();
         }
 
-        // Setup return book buttons using event delegation
+        // Setup return book buttons
         document.body.addEventListener('click', function(e) {
             const returnButton = e.target.closest('.return-book-btn');
             if (returnButton) {
                 e.preventDefault();
-                console.log("Return button clicked");
 
                 const bookId = returnButton.getAttribute('data-bookid');
                 const bookTitle = returnButton.getAttribute('data-booktitle');
-
-                console.log("Book ID:", bookId, "Book Title:", bookTitle);
 
                 // Set values in the rating modal
                 document.getElementById('bookIdToRate').value = bookId;
@@ -670,7 +601,7 @@
             }
         });
 
-        // After a successful return, handle form submission to actually return the book
+        // Form submission handler
         document.getElementById('ratingForm').addEventListener('submit', function(e) {
             const bookId = document.getElementById('bookIdToRate').value;
 
@@ -693,187 +624,26 @@
                 });
             }, 100); // Small delay to ensure rating is processed first
         });
+    });
 
-        // Google-like autocomplete implementation
-        console.log("Setting up autocomplete...");
+    // Separate scroll event listener
+    window.addEventListener('scroll', () => {
+        let current = '';
+        const sections = document.querySelectorAll('#suggested-books, #current-borrowed, #available-books, #borrow-history');
 
-        // Get DOM elements
-        const searchInput = document.getElementById("googleSearchInput");
-        const suggestionsContainer = document.getElementById("googleSuggestions");
-        const searchForm = document.getElementById("searchForm");
-
-        if (!searchInput || !suggestionsContainer || !searchForm) {
-            console.error("Required elements not found:", {
-                searchInput: !!searchInput,
-                suggestionsContainer: !!suggestionsContainer,
-                searchForm: !!searchForm
-            });
-            return;
-        }
-
-        console.log("Elements found, setting up event listeners");
-
-        // Search input event handler
-        searchInput.addEventListener("input", function() {
-            const term = this.value.trim();
-
-            console.log("Input event fired with term:", term);
-
-            if (term.length < 2) {
-                suggestionsContainer.style.display = "none";
-                return;
-            }
-
-            // Make AJAX request for suggestions
-            fetch(`/user/autocomplete-all?term=${encodeURIComponent(term)}`)
-                .then(response => response.json())
-                .then(data => {
-                    console.log("Received suggestions data:", data);
-
-                    // Clear previous suggestions
-                    suggestionsContainer.innerHTML = "";
-
-                    let hasSuggestions = false;
-
-                    // Process each category
-                    Object.entries({
-                        "Titles": data.title || [],
-                        "Authors": data.author || [],
-                        "Genres": data.genre || [],
-                        "Years": data.year || []
-                    }).forEach(([categoryName, items]) => {
-                        if (items.length > 0) {
-                            hasSuggestions = true;
-
-                            // Add category header
-                            const categoryHeader = document.createElement("div");
-                            categoryHeader.className = "google-suggestion-category";
-                            categoryHeader.textContent = categoryName;
-                            suggestionsContainer.appendChild(categoryHeader);
-
-                            // Add items
-                            items.forEach(item => {
-                                const suggestionItem = document.createElement("div");
-                                suggestionItem.className = "google-suggestion-item";
-                                suggestionItem.dataset.value = item;
-
-                                const itemText = document.createElement("span");
-                                itemText.textContent = item;
-
-                                const itemType = document.createElement("span");
-                                itemType.className = "google-suggestion-type";
-                                itemType.textContent = `(${categoryName.slice(0, -1).toLowerCase()})`;
-
-                                suggestionItem.appendChild(itemText);
-                                suggestionItem.appendChild(itemType);
-
-                                // Add click handler
-                                suggestionItem.addEventListener("click", function() {
-                                    searchInput.value = this.dataset.value;
-                                    suggestionsContainer.style.display = "none";
-                                    searchForm.submit();
-                                });
-
-                                suggestionsContainer.appendChild(suggestionItem);
-                            });
-                        }
-                    });
-
-                    // Display or hide suggestions
-                    suggestionsContainer.style.display = hasSuggestions ? "block" : "none";
-                })
-                .catch(error => {
-                    console.error("Error fetching suggestions:", error);
-                    suggestionsContainer.style.display = "none";
-                });
-        });
-
-        // Handle keyboard navigation
-        searchInput.addEventListener("keydown", function(e) {
-            const items = suggestionsContainer.querySelectorAll(".google-suggestion-item");
-
-            if (items.length === 0 || suggestionsContainer.style.display === "none") {
-                return;
-            }
-
-            const active = suggestionsContainer.querySelector(".google-suggestion-item.active");
-
-            switch (e.key) {
-                case "ArrowDown":
-                    e.preventDefault();
-
-                    if (!active) {
-                        items[0].classList.add("active");
-                    } else {
-                        active.classList.remove("active");
-
-                        const nextSibling = active.nextElementSibling;
-                        if (nextSibling && nextSibling.classList.contains("google-suggestion-item")) {
-                            nextSibling.classList.add("active");
-                        } else {
-                            items[0].classList.add("active");
-                        }
-                    }
-
-                    // Ensure active item is visible
-                    suggestionsContainer.querySelector(".active")?.scrollIntoView({
-                        block: "nearest"
-                    });
-                    break;
-
-                case "ArrowUp":
-                    e.preventDefault();
-
-                    if (!active) {
-                        items[items.length - 1].classList.add("active");
-                    } else {
-                        active.classList.remove("active");
-
-                        const prevSibling = active.previousElementSibling;
-                        if (prevSibling && prevSibling.classList.contains("google-suggestion-item")) {
-                            prevSibling.classList.add("active");
-                        } else {
-                            items[items.length - 1].classList.add("active");
-                        }
-                    }
-
-                    // Ensure active item is visible
-                    suggestionsContainer.querySelector(".active")?.scrollIntoView({
-                        block: "nearest"
-                    });
-                    break;
-
-                case "Enter":
-                    if (active) {
-                        e.preventDefault();
-                        searchInput.value = active.dataset.value;
-                        suggestionsContainer.style.display = "none";
-                        searchForm.submit();
-                    }
-                    break;
-
-                case "Escape":
-                    suggestionsContainer.style.display = "none";
-                    break;
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (window.scrollY >= (sectionTop - 200)) {
+                current = section.getAttribute('id');
             }
         });
 
-        // Hide suggestions when clicking outside
-        document.addEventListener("click", function(e) {
-            if (!searchInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
-                suggestionsContainer.style.display = "none";
+        document.querySelectorAll('.library-nav-link').forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href').includes(current)) {
+                link.classList.add('active');
             }
         });
-
-        // Show suggestions when focusing on input
-        searchInput.addEventListener("focus", function() {
-            if (this.value.trim().length >= 2) {
-                // Trigger input event to show suggestions
-                this.dispatchEvent(new Event("input"));
-            }
-        });
-
-        console.log("Event listeners set up successfully");
     });
 </script>
 

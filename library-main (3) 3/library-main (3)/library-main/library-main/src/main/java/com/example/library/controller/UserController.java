@@ -7,6 +7,8 @@ import com.example.library.model.BorrowedBook;
 import com.example.library.service.BookService;
 import com.example.library.service.BorrowedBookService;
 import com.example.library.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,10 +25,9 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-
 @Controller
 @RequestMapping("/user")
+@Tag(name = "User Controller")
 public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -39,8 +40,8 @@ public class UserController {
     @Autowired
     private BorrowedBookService borrowedBookService;
 
-    // In UserController.java - update the userDashboard method
     @GetMapping("/dashboard")
+    @Operation(summary = "User dashboard")
     public String userDashboard(@RequestParam(value = "query", required = false) String query,
                                 Model model, Principal principal) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -79,6 +80,7 @@ public class UserController {
     }
 
     @PostMapping("/borrow-book")
+    @Operation(summary = "Borrowing of book")
     public String borrowBook(@RequestParam String bookId, Principal principal, RedirectAttributes redirectAttributes) {
         Book book = bookService.findById(bookId);
         String username = principal.getName();
@@ -104,6 +106,7 @@ public class UserController {
     }
 
     @PostMapping("/return-book")
+    @Operation(summary = "Returning of book")
     public String returnBook(@RequestParam String bookId, Principal principal, RedirectAttributes redirectAttributes) {
         Book book = bookService.findById(bookId);
         String username = principal.getName();
@@ -114,7 +117,6 @@ public class UserController {
 
             borrowedBookService.returnBook(username, bookId);
 
-            // Instead of redirecting immediately, set a flash attribute to trigger the rating modal
             redirectAttributes.addFlashAttribute("showRatingModal", true);
             redirectAttributes.addFlashAttribute("ratedBookId", bookId);
             redirectAttributes.addFlashAttribute("ratedBookTitle", book.getTitle());
@@ -125,8 +127,8 @@ public class UserController {
         return "redirect:/user/dashboard";
     }
 
-    // Add new endpoint for submitting ratings
     @PostMapping("/submit-rating")
+    @Operation(summary = "Rating of book")
     public String submitRating(@RequestParam String bookId,
                                @RequestParam int rating,
                                @RequestParam(required = false) String comment,

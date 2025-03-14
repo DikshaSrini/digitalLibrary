@@ -120,7 +120,7 @@
 
 <!-- Header Section -->
 <div class="container mt-4 text-center">
-    <h1 class="fw-bold">📚 Digital Library - Admin Dashboard</h1>
+    <h1 class="fw-bold">📚 <i>BookNest</i> - Admin Dashboard</h1>
 </div>
 
 <!-- User Controls -->
@@ -179,6 +179,7 @@
                     <th>Author</th>
                     <th>Genre</th>
                     <th>Year</th>
+                    <th>Quantity</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -188,6 +189,7 @@
                     <td th:text="${book.author}" class="book-author"></td>
                     <td th:text="${book.genre}" class="book-genre"></td>
                     <td th:text="${book.publicationYear}" class="book-year"></td>
+                    <td th:text="${book.quantity}" class="book-quantity"></td>
 
                     <!-- Delete Action -->
                     <td>

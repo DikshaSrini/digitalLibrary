@@ -36,7 +36,7 @@ public class Book {
         this.quantity = quantity;
     }
 
-    // Existing getters and setters...
+    // Getters and setters...
     public String getId() {
         return id;
     }
@@ -85,7 +85,6 @@ public class Book {
         this.quantity = quantity;
     }
 
-    // New getters and setters for rating fields
     public double getAverageRating() {
         return averageRating;
     }

@@ -2,6 +2,8 @@ package com.example.library.controller;
 
 import com.example.library.model.User;
 import com.example.library.repository.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
+@Tag(name = "Authorization Controller", description = "Role based entry point by authentication and authorization.")
 public class AuthController {
 
     @Autowired
@@ -20,16 +23,19 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;  // To hash passwords
 
     @GetMapping("/login")
+    @Operation(summary = "Login Page")
     public String loginPage() {
         return "login";
     }
 
     @GetMapping("/register")
+    @Operation(summary = "Registration Page")
     public String registerPage() {
         return "register";
     }
 
     @PostMapping("/register")
+    @Operation(summary = "Onboarded user")
     public String registerUser(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
         System.out.println("Received user: " + user);
 
@@ -48,6 +54,7 @@ public class AuthController {
     }
 
     @GetMapping("/redirectBasedOnRole")
+    @Operation(summary = "Role based signing in")
     public String redirectBasedOnRole(Authentication authentication) {
         for (GrantedAuthority authority : authentication.getAuthorities()) {
             String role = authority.getAuthority();

@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 
-@Document(collection = "borrowed_history") // ✅ Save history in a separate collection
+@Document(collection = "borrowed_history")
 public class BorrowHistory {
 
     @Id
@@ -26,7 +26,7 @@ public class BorrowHistory {
         this.returnDate = returnDate;
     }
 
-    // ✅ Getters and Setters
+    //Getters and Setters
     public String getId() { return id; }
     public String getUsername() { return username; }
     public String getBookId() { return bookId; }
@@ -55,9 +55,7 @@ public class BorrowHistory {
         this.genre = genre;
     }
 
-    public void setIssueDate(LocalDate issueDate) {
-        this.issueDate = issueDate;
-    }
+    public void setIssueDate(LocalDate issueDate) { this.issueDate = issueDate; }
 
     public void setReturnDate(LocalDate returnDate) {
         this.returnDate = returnDate;
